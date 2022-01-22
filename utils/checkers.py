@@ -26,14 +26,14 @@ months_dict = {
 def refactor_date(date: bytes) -> datetime:
     date = date.decode("utf-8")
     date = re.search(r"notAfter=(...) (.?\d) (\d{2}):(\d{2}):(\d{2}) (\d{4}) GMT", date, re.MULTILINE)
-    return datetime(
+    return str(datetime(
         int(date.group(6)),
         months_dict[date.group(1)],
         int(date.group(2)),
         int(date.group(3)),
         int(date.group(4)),
         int(date.group(5)),
-    )
+    ))
 
 
 class BaseChecker:
@@ -45,8 +45,10 @@ class BaseChecker:
         self.cache_file = cache_file
         if os.path.exists(cache_file):
             self.cache = self.read_cache()
+            print(f"LOADED {self.name} CACHE...")
         else:
             self.cache = {"remote": [], "local": []}
+            print(f"LOADED EMPTY {self.name} CACHE...")
 
     def check_remote_validity(self, name: str) -> bytes:
         process = subprocess.Popen(
@@ -65,9 +67,12 @@ class BaseChecker:
         return json.load(open(self.cache_file))
 
     def check_cache(self):
+        print(f"CHECKING {self.name} CACHE")
         for key, value in self.cache.items():
             for idx, element in enumerate(value):
-                self.cache[key][idx] = self.check(element["name"], key)
+                validation = self.check(element["name"], key)["expiry_date"]
+                self.cache[key][idx] = {"name": element["name"], "expiry_date": validation}
+                yield validation, element['name']
 
     def check(self, name: str, split: str) -> Dict:
         if split == "remote":
@@ -76,7 +81,7 @@ class BaseChecker:
             expiry_date = refactor_date(self.check_local_validity(name))
 
         print(f"{self.name} SSL Certificate for {name} expires at {expiry_date}")
-        return {"name": name, "expiry_date": str(expiry_date)}
+        return {"name": name, "expiry_date": expiry_date}
 
     def add_cert(self, split: str, name: str):
         if split == "remote":
