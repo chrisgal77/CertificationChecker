@@ -4,10 +4,26 @@ import time
 import notifypy
 
 from utils import PEMSSLChecker, DERSSLChecker, expire
+from utils.checkers import BaseChecker
 
 
 notifier = notifypy.Notify()
 
+
+def _evaluate(checker: BaseChecker):
+    for validation, name in checker.check_cache():
+        expiry, time_left = expire(validation, args.period)
+        if expiry:
+            print(
+                f"CERTIFICATE {name} EXPIRES IN LESS THAN {args.period} seconds! \n Time left: {time_left}"
+            )
+            notifier.title = "CERTIFICATE EXPIRY"
+            notifier.message = f"CERTIFICATE {name} EXPIRES IN LESS THAN {args.period} seconds! \n Time left: {time_left}"
+            notifier.application_name = "Certification checker"
+            notifier.icon_path = os.path.join(
+                os.path.dirname(__file__), "Attention-sign-icon.png"
+            )
+            notifier.send(block=False)
 
 def interactive_mode():
     pem_validator = PEMSSLChecker()
@@ -48,8 +64,8 @@ def interactive_mode():
                 print("#" * 30)
                 print('CHECKING CACHE...')
                 print("#" * 30)
-                pem_validator.check_cache()
-                der_validator.check_cache()
+                _evaluate(pem_validator)
+                _evaluate(der_validator)
             case "h":
                 break
         print("#" * 30)
@@ -69,6 +85,7 @@ def get_args():
 
 
 if __name__ == "__main__":
+    
     args = get_args()
 
     if args.i:
@@ -77,17 +94,5 @@ if __name__ == "__main__":
         checkers = [PEMSSLChecker(), DERSSLChecker()]
         while True:
             for checker in checkers:
-                for validation, name in checker.check_cache():
-                    expiry, time_left = expire(validation, args.period)
-                    if expiry:
-                        print(
-                            f"CERTIFICATE {name} EXPIRES IN LESS THAN {args.period} seconds! \n Time left: {time_left}"
-                        )
-                        notifier.title = "CERTIFICATE EXPIRY"
-                        notifier.message = f"CERTIFICATE {name} EXPIRES IN LESS THAN {args.period} seconds! \n Time left: {time_left}"
-                        notifier.application_name = "Certification checker"
-                        notifier.icon_path = os.path.join(
-                            os.path.dirname(__file__), "Attention-sign-icon.png"
-                        )
-                        notifier.send(block=False)
+                _evaluate(checker)
             time.sleep(args.period)
