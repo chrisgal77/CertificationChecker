@@ -62,8 +62,8 @@ def get_args():
     parser = argparse.ArgumentParser(
         description="Flags for specific certification validation"
     )
-    parser.add_argument("-i", "--interactive", action="store_true", dest="i")
-    parser.add_argument("-c", "--contiunous-running", action="store_true", dest="c")
+    parser.add_argument("-i", "--interactive", help="The script runs in an interactive mode, where you can choose which mode to use", action="store_true", dest="i")
+    parser.add_argument("-c", "--contiunous-running", help="The script runs contiunously checking cerificates every period", action="store_true", dest="c")
     parser.add_argument("-p", "--period", type=int, dest="period", default=86400)
     return parser.parse_args()
 

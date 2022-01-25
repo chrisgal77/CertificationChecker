@@ -26,7 +26,7 @@ python3 main.py -i
 
 - Następnie można wybrac interesującą opcję
 
-## Włączenie tryby czuwania
+## Włączenie trybu czuwania
 
 W trybie czuwania, skrypt sprawdza ważność certyfikatów 
 co podany okres czasu w sekundach.
