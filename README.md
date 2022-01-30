@@ -34,6 +34,11 @@ co podany okres czasu w sekundach.
 python3 main.py -c -p <czas-co-ile-nalezy-sprawdzac-waznosc>
 ```
 
+## Jak podawać nazwy serwerów / ścieżki do plików
+- Ścieżki to plików powinno być bezwzględne
+- Nazwy serwerów najlepiej podawać w formie ```www.domena.com``` jednak program powinien sobie poradzić
+ z ```domena.com```
+
 ## --help
 
 W razie niejasności, czy zobaczenia opisu danej flagi należy 
