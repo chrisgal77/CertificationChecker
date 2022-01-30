@@ -33,3 +33,12 @@ co podany okres czasu w sekundach.
 ```
 python3 main.py -c -p <czas-co-ile-nalezy-sprawdzac-waznosc>
 ```
+
+## --help
+
+W razie niejasności, czy zobaczenia opisu danej flagi należy 
+uruchomić skrypt z flagą --help
+
+```
+python3 main.py --help
+```
