@@ -1,5 +1,18 @@
 # Dokumentacja
 
+## O programie
+Program słuźy do monitorowania i sprawdzania ważności certyfikatów SSL, zdalnych i lokalnych w formacie PEM lub DER.
+Program umożliwia zapisywanie wyników w tworzących się podczas
+użytkowania plikach json.
+Skrypt wysyła powiadomienia kiedy czas wygaśnięcia certyfikatów jest mniejszy od limitu czasu.
+![alt text](images/image2.png)
+
+Przykładowy output:
+![alt text](images/image3.png)
+
+Dane zapisane w plikach:
+![alt text](images/image4.png)
+
 ## Wymagane technologie
 
 - Python 3.10+
@@ -24,7 +37,7 @@ python3 main.py -i
 - Następnie pojawia się panel konsolowy
 ![alt text](images/image1.png)
 
-- Następnie można wybrac interesującą opcję
+- Następnie można wybrac interesującą opcję i wprowadzić domenę lub ścieżkę do pliku
 
 ## Włączenie trybu czuwania
 

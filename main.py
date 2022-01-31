@@ -13,6 +13,7 @@ notifier = notifypy.Notify()
 
 def _evaluate(checker: BaseChecker):
     for validation, name in checker.check_cache():
+        print(name)
         expiry, time_left = expire(validation, args.period)
         if expiry:
             print(
@@ -21,9 +22,6 @@ def _evaluate(checker: BaseChecker):
             notifier.title = "CERTIFICATE EXPIRY"
             notifier.message = f"CERTIFICATE {name} EXPIRES IN LESS THAN {args.period} seconds! \n Time left: {time_left}"
             notifier.application_name = "Certification checker"
-            notifier.icon_path = os.path.join(
-                os.path.dirname(__file__), "Attention-sign-icon.png"
-            )
             notifier.send(block=False)
 
 
@@ -35,13 +33,12 @@ def interactive_mode():
         print("#" * 30)
         print("INTERACTIVE MODE ")
         print("a) check remote ssl cert")
-        print("b) add and validate remote pem cert")
-        print("c) add and validate remote der cert")
-        print("d) add and validate local pem cert")
-        print("e) add and validate local der cert")
-        print("f) check cache for each")
-        print("g) view cache")
-        print("h) exit")
+        print("b) add and validate remote cert")
+        print("c) add and validate local pem cert")
+        print("d) add and validate local der cert")
+        print("e) check cache for each")
+        print("f) view cache")
+        print("g) exit")
         print("#" * 30)
         input_ = input()
         match input_:
@@ -54,29 +51,25 @@ def interactive_mode():
                 pem_validator.add_cert("remote", name)
                 print("#" * 30)
             case "c":
-                name = input("Server name")
-                der_validator.add_cert("remote", name)
-                print("#" * 30)
-            case "d":
                 name = input("PEM file path:")
                 pem_validator.add_cert("local", name)
                 print("#" * 30)
-            case "e":
+            case "d":
                 name = input("DER file path:")
                 der_validator.add_cert("local", name)
                 print("#" * 30)
-            case "f":
+            case "e":
                 print("#" * 30)
                 print("CHECKING CACHE...")
                 print("#" * 30)
                 _evaluate(pem_validator)
                 _evaluate(der_validator)
-            case "g":
+            case "f":
                 print('PEM CHECKER')
                 pprint(pem_validator.cache)
                 print("DER CHECKER")
                 pprint(der_validator.cache)
-            case "h":
+            case "g":
                 print("#" * 30)
                 break
         print("#" * 30)
